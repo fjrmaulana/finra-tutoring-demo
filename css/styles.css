@@ -1,0 +1,292 @@
+/* ==========================================================================
+   Seventy-Two Tutoring — concept homepage styles
+   Plain CSS, no build step. Sections, in order:
+     1. Fonts            4. Buttons            7. Page sections
+     2. Design tokens    5. Header             8. Contact form
+     3. Base & layout    6. Hero + exam card   9. Footer, motion, print
+   ========================================================================== */
+
+/* 1. Fonts (self-hosted) -------------------------------------------------- */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("../fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Public Sans";
+  src: url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+
+/* 2. Design tokens -------------------------------------------------------- */
+:root {
+  --paper: #ffffff;
+  --ledger: #eaf2ec;        /* pale ledger-paper green for bands and the exam card */
+  --rule: #c3d5c9;          /* ruled lines */
+  --forest: #0e3b2c;        /* buttons, dark band, headings on pale green */
+  --forest-deep: #082a1f;
+  --ink: #13231c;           /* main text */
+  --muted: #4a5e54;         /* secondary text */
+  --mark: #ffe066;          /* highlighter yellow: used only to mark key facts */
+  --error: #a8261d;
+
+  --font-display: "Bricolage Grotesque", "Arial Narrow", Arial, sans-serif;
+  --font-body: "Public Sans", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+
+  --header-h: 4.5rem;
+  --wrap: 72rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --section: clamp(4rem, 8vw, 7rem);
+  --radius: 6px;
+}
+
+/* 3. Base & layout -------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 1rem); }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 {
+  font-family: var(--font-display); font-weight: 600; line-height: 1.05;
+  letter-spacing: -0.02em; margin: 0 0 0.5em; text-wrap: balance;
+}
+h1 { font-size: clamp(2.5rem, 5.6vw, 4.4rem); }
+h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); }
+h3 { font-size: 1.35rem; line-height: 1.2; letter-spacing: -0.01em; }
+p { margin: 0 0 1em; max-width: 60ch; }
+ul, ol, dl { margin: 0; padding: 0; }
+a { color: var(--forest); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--forest); outline-offset: 3px; border-radius: 3px; }
+
+/* The highlighter: marks the one fact a student most needs to remember */
+mark {
+  background: var(--mark); color: inherit;
+  padding: 0.05em 0.3em; border-radius: 0.25em 0.6em 0.3em 0.55em;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+
+.wrap { width: 100%; max-width: calc(var(--wrap) + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section); }
+.section--ledger { background: var(--ledger); }
+.section--forest { background: var(--forest); color: #fff; }
+.section__head { margin-bottom: clamp(2rem, 4vw, 3.25rem); }
+.section__head p { font-size: 1.15rem; color: var(--muted); margin-bottom: 0; }
+.section--forest .section__head p { color: rgba(255, 255, 255, 0.8); }
+.lead { font-size: clamp(1.12rem, 1.5vw, 1.28rem); color: var(--muted); }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 200; padding: 0.7rem 1rem; background: var(--ink); color: #fff; border-radius: var(--radius); }
+.skip-link:focus { top: 1rem; }
+
+/* Thin note above the header that says what this page is */
+.demo-note { background: var(--forest); color: #fff; font-size: 0.9rem; text-align: center; padding: 0.5rem var(--gutter); }
+.demo-note p { margin: 0 auto; max-width: none; }
+
+/* 4. Buttons -------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 3rem; padding: 0.7rem 1.35rem;
+  background: var(--forest); color: #fff;
+  border: 2px solid var(--forest); border-radius: var(--radius);
+  font: 600 1rem/1.2 var(--font-body); text-decoration: none; cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn:hover { background: var(--forest-deep); border-color: var(--forest-deep); }
+.btn--outline { background: transparent; color: var(--forest); }
+.btn--outline:hover { background: var(--forest); color: #fff; }
+.btn--small { min-height: 2.6rem; padding: 0.45rem 1rem; font-size: 0.95rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* 5. Header --------------------------------------------------------------- */
+.site-header {
+  position: sticky; top: 0; z-index: 100; height: var(--header-h);
+  background: var(--paper); border-bottom: 1px solid var(--rule);
+}
+.site-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; height: 100%; }
+.brand {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  color: var(--ink); text-decoration: none; white-space: nowrap;
+  font: 600 1.2rem/1 var(--font-display); letter-spacing: -0.01em;
+}
+.brand__mark {
+  display: grid; place-items: center; width: 2.25rem; height: 2.25rem;
+  background: var(--mark); color: var(--forest);
+  border-radius: 0.4em 0.75em 0.45em 0.7em;
+  font: 700 1.15rem/1 var(--font-display); letter-spacing: -0.03em;
+}
+.site-nav { display: flex; align-items: center; gap: 1.6rem; }
+.site-nav ul { display: flex; gap: 1.6rem; list-style: none; }
+.site-nav li a { display: block; padding: 0.4rem 0; color: var(--ink); font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; }
+.site-nav li a:hover { border-bottom-color: var(--forest); }
+.nav-toggle {
+  display: none; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0.4rem 0.8rem;
+  background: transparent; color: var(--ink); border: 2px solid var(--ink); border-radius: var(--radius);
+  font: 600 0.95rem/1 var(--font-body); cursor: pointer;
+}
+.nav-toggle__bars, .nav-toggle__bars::before, .nav-toggle__bars::after { display: block; width: 1.1rem; height: 2px; background: currentColor; content: ""; transition: transform 0.2s; }
+.nav-toggle__bars { position: relative; }
+.nav-toggle__bars::before { position: absolute; top: -6px; }
+.nav-toggle__bars::after { position: absolute; top: 6px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+@media (max-width: 60rem) {
+  :root { --header-h: 4rem; }
+  .js .nav-toggle { display: inline-flex; }
+  .js .site-nav {
+    display: none; position: absolute; left: 0; right: 0; top: 100%;
+    flex-direction: column; align-items: stretch; gap: 1.25rem;
+    padding: 0.75rem var(--gutter) 1.75rem; background: var(--paper);
+    border-bottom: 1px solid var(--rule); box-shadow: 0 18px 30px -18px rgba(19, 35, 28, 0.35);
+  }
+  .js .site-header.is-open .site-nav { display: flex; }
+  .js .site-nav ul { flex-direction: column; gap: 0; }
+  .js .site-nav li a { padding: 0.9rem 0; border-bottom: 1px solid var(--rule); font-size: 1.1rem; }
+  html:not(.js) .site-header { height: auto; padding-block: 0.75rem; }
+  html:not(.js) .site-header__inner, html:not(.js) .site-nav, html:not(.js) .site-nav ul { flex-wrap: wrap; gap: 0.5rem 1.1rem; }
+}
+
+/* 6. Hero + exam card ----------------------------------------------------- */
+.hero { padding-block: clamp(3rem, 7vw, 6rem) clamp(3.5rem, 7vw, 6rem); }
+.hero__grid { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); align-items: center; }
+@media (min-width: 60rem) { .hero__grid { grid-template-columns: 1.05fr 0.95fr; } }
+.hero h1 { max-width: 13ch; }
+.hero .lead { max-width: 46ch; }
+.hero .btn-row { margin-top: 1.9rem; }
+.hero__assure { margin: 1.25rem 0 0; font-size: 0.95rem; color: var(--muted); }
+
+/* The exam card looks like a sheet of ruled ledger paper */
+.exam-card {
+  background: var(--ledger); border: 1px solid var(--rule); border-radius: 12px;
+  box-shadow: 0 30px 50px -36px rgba(14, 59, 44, 0.55);
+  overflow: hidden;
+}
+.exam-card__title {
+  margin: 0; padding: 1.1rem clamp(1.1rem, 3vw, 1.75rem) 0.9rem;
+  font: 600 1.05rem/1.3 var(--font-body); letter-spacing: 0; color: var(--forest);
+}
+.tabs { display: flex; gap: 0.35rem; padding: 0 clamp(1.1rem, 3vw, 1.75rem); overflow-x: auto; scrollbar-width: thin; border-bottom: 1px solid var(--rule); }
+.tab {
+  flex: none; min-height: 2.75rem; padding: 0.5rem 0.9rem; margin-bottom: -1px;
+  background: transparent; color: var(--muted);
+  border: 1px solid transparent; border-bottom: 0; border-radius: 8px 8px 0 0;
+  font: 600 0.98rem/1.2 var(--font-body); cursor: pointer;
+}
+.tab:hover { color: var(--forest); }
+.tab[aria-selected="true"] { background: var(--paper); color: var(--forest); border-color: var(--rule); }
+html:not(.js) .tabs { display: none; }
+
+.exam { background: var(--paper); padding: clamp(1.25rem, 3vw, 1.9rem) clamp(1.1rem, 3vw, 1.75rem) clamp(1.3rem, 3vw, 1.9rem); }
+.exam + .exam { border-top: 1px solid var(--rule); }
+.exam h3 { font-size: clamp(1.4rem, 2.4vw, 1.75rem); margin-bottom: 0.35em; }
+.exam__for { color: var(--muted); margin-bottom: 1.1rem; }
+.exam__facts { border-top: 1px solid var(--rule); }
+.exam__facts div { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
+.exam__facts dt { color: var(--muted); }
+.exam__facts dd { margin: 0; font: 600 1.3rem/1.2 var(--font-display); font-variant-numeric: tabular-nums; text-align: right; }
+.exam__note { margin: 1.1rem 0 0; font-size: 0.98rem; }
+.exam__note + .exam__note { margin-top: 0.5rem; }
+.exam-card__source { margin: 0; padding: 0.8rem clamp(1.1rem, 3vw, 1.75rem); font-size: 0.85rem; color: var(--muted); max-width: none; }
+
+/* 7. Page sections -------------------------------------------------------- */
+/* Three ways to work together: plain columns divided by rules, no boxes */
+.services { display: grid; gap: 2rem; list-style: none; }
+@media (min-width: 52rem) {
+  .services { grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .services li { padding-inline: clamp(1.25rem, 2.5vw, 2.25rem); border-left: 1px solid var(--rule); }
+  .services li:first-child { padding-left: 0; border-left: 0; }
+  .services li:last-child { padding-right: 0; }
+}
+.services p { color: var(--muted); margin-bottom: 0.9rem; }
+.services__meta { font-weight: 600; color: var(--ink); margin: 0; }
+
+/* How it works: a real sequence, so the steps are numbered */
+.steps { display: grid; gap: 1.75rem 2rem; list-style: none; counter-reset: step; }
+@media (min-width: 40rem) { .steps { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .steps { grid-template-columns: repeat(4, 1fr); } }
+.steps li { counter-increment: step; padding-top: 1.1rem; border-top: 2px solid rgba(255, 255, 255, 0.35); }
+.steps li::before {
+  content: counter(step); display: block; margin-bottom: 0.7rem;
+  font: 600 2.4rem/1 var(--font-display); color: var(--mark);
+}
+.steps h3 { color: #fff; }
+.steps p { color: rgba(255, 255, 255, 0.82); margin: 0; }
+
+/* About */
+.about { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+@media (min-width: 52rem) { .about { grid-template-columns: 0.8fr 1.2fr; } }
+.about__photo {
+  display: grid; place-items: center; aspect-ratio: 4 / 5; max-width: 24rem;
+  background: var(--ledger); border: 1px dashed #8fa898; border-radius: 12px;
+  color: var(--muted); text-align: center; padding: 1.5rem; font-size: 0.98rem;
+}
+.about__facts { list-style: none; margin-top: 1.5rem; border-top: 1px solid var(--rule); }
+.about__facts li { padding: 0.8rem 0; border-bottom: 1px solid var(--rule); }
+
+/* Reviews: empty slots, because only real reviews belong here */
+.reviews { display: grid; gap: 1.25rem; list-style: none; }
+@media (min-width: 52rem) { .reviews { grid-template-columns: repeat(3, 1fr); } }
+.reviews li { padding: 1.5rem; background: var(--paper); border: 1px dashed #8fa898; border-radius: 12px; }
+.reviews p { color: var(--muted); margin-bottom: 1rem; }
+.reviews footer { font-weight: 600; font-size: 0.95rem; }
+.reviews__promise { margin: 1.75rem 0 0; color: var(--muted); }
+
+/* Articles */
+.articles { list-style: none; border-top: 1px solid var(--rule); }
+.articles li { border-bottom: 1px solid var(--rule); }
+.articles a {
+  display: grid; gap: 0.3rem 2rem; padding: 1.25rem 0; color: var(--ink); text-decoration: none;
+}
+@media (min-width: 44rem) { .articles a { grid-template-columns: 8rem 1fr auto; align-items: baseline; } }
+.articles__tag { font-weight: 600; color: var(--forest); font-size: 0.95rem; }
+.articles__title { font: 600 1.3rem/1.25 var(--font-display); letter-spacing: -0.01em; }
+.articles a:hover .articles__title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+.articles__time { color: var(--muted); font-size: 0.95rem; white-space: nowrap; }
+
+/* 8. Contact form --------------------------------------------------------- */
+.contact { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); }
+@media (min-width: 56rem) { .contact { grid-template-columns: 0.85fr 1.15fr; } }
+.contact__list { list-style: none; margin-top: 1.75rem; border-top: 1px solid var(--rule); }
+.contact__list li { padding: 0.9rem 0; border-bottom: 1px solid var(--rule); }
+.contact__list strong { display: block; }
+.contact__list span { color: var(--muted); }
+
+.form { padding: clamp(1.5rem, 4vw, 2.5rem); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; }
+.form__grid { display: grid; gap: 1.1rem; }
+@media (min-width: 36rem) { .form__grid { grid-template-columns: 1fr 1fr; } .field--full { grid-column: 1 / -1; } }
+.field label { display: block; margin-bottom: 0.35rem; font-weight: 600; font-size: 0.98rem; }
+.field__hint { font-weight: 400; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%; min-height: 3rem; padding: 0.65rem 0.8rem;
+  background: var(--paper); color: var(--ink);
+  border: 1.5px solid #7d9186; border-radius: var(--radius); font: inherit;
+}
+.field textarea { min-height: 7rem; resize: vertical; }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline-offset: 1px; border-color: var(--forest); }
+.field [aria-invalid="true"] { border-color: var(--error); }
+.field__error { margin: 0.35rem 0 0; color: var(--error); font-size: 0.93rem; font-weight: 500; }
+.form .btn { margin-top: 1.5rem; }
+.form__status { margin: 1rem 0 0; font-weight: 600; }
+.form__status:empty { display: none; }
+.form__note { margin: 1rem 0 0; font-size: 0.93rem; color: var(--muted); }
+
+/* 9. Footer, motion, print ------------------------------------------------ */
+.site-footer { background: var(--forest-deep); color: rgba(255, 255, 255, 0.82); padding-block: clamp(2.5rem, 5vw, 4rem) 2rem; }
+.site-footer a { color: #fff; }
+.site-footer :focus-visible { outline-color: #fff; }
+.site-footer__top { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; justify-content: space-between; align-items: center; }
+.site-footer .brand { color: #fff; }
+.site-footer ul { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; list-style: none; }
+.site-footer__legal { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.18); font-size: 0.9rem; }
+.site-footer__legal p { max-width: 80ch; margin-bottom: 0.6em; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+@media print { .site-header, .demo-note, .tabs { display: none !important; } }
